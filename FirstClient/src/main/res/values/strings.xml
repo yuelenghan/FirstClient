@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">FirstClient</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="aqyh_tab_yh">隐患</string>
+    <string name="aqyh_tab_sw">三违</string>
+    <string name="aqyh_tab_rjxx">入井信息</string>
+</resources>
