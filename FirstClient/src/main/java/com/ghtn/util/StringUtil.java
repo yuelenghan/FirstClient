@@ -12,4 +12,18 @@ public class StringUtil {
         return false;
     }
 
+    /**
+     * 处理长字符串
+     *
+     * @param s     长字符串
+     * @param limit 字符串最大长度
+     * @return 处理之后的字符串
+     */
+    public static String processLongStr(String s, int limit) {
+        if (s.length() > limit) {
+            s = s.substring(0, limit) + "...";
+        }
+        return s;
+    }
+
 }

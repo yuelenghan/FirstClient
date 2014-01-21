@@ -1,13 +1,17 @@
 package com.ghtn.myapplication;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import com.ghtn.util.ConstantUtil;
 import com.loopj.android.http.AsyncHttpClient;
@@ -30,13 +34,15 @@ import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 /**
  * Created by Administrator on 14-1-9.
  */
-public class SwFragmentTab extends Fragment implements OnRefreshListener {
+public class SwFragmentTab extends Fragment implements OnRefreshListener, AdapterView.OnItemClickListener {
 
     private ListView listView;
     private List<Map<String, Object>> dataList;
     private static final String TAG = "SwFragmentTab";
 
     private SimpleAdapter simpleAdapter;
+
+    private ProgressBar progressBar;
 
     private PullToRefreshLayout mPullToRefreshLayout;
 
@@ -50,8 +56,10 @@ public class SwFragmentTab extends Fragment implements OnRefreshListener {
 
         if (view != null) {
             listView = (ListView) view.findViewById(R.id.baseInfoList);
+            progressBar = (ProgressBar) view.findViewById(R.id.progress);
         }
 
+        progressBar.setVisibility(View.VISIBLE);
         client.get(ConstantUtil.BASE_URL + "/baseInfo/102", new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
@@ -79,6 +87,8 @@ public class SwFragmentTab extends Fragment implements OnRefreshListener {
                             new int[]{R.id.tv_item_id, R.id.tv_item_name});
 
                     listView.setAdapter(simpleAdapter);
+
+                    progressBar.setVisibility(View.GONE);
                 }
 
             }
@@ -93,6 +103,9 @@ public class SwFragmentTab extends Fragment implements OnRefreshListener {
                 .listener(this)
                         // Finally commit the setup to our PullToRefreshLayout
                 .setup(mPullToRefreshLayout);
+
+
+        listView.setOnItemClickListener(this);
 
         return view;
     }
@@ -128,5 +141,17 @@ public class SwFragmentTab extends Fragment implements OnRefreshListener {
                 }
             }
         });
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        String idText = (String) ((TextView) view.findViewById(R.id.tv_item_id)).getText();
+
+        Intent intent = new Intent();
+        intent.putExtra("baseInfo", "sw");
+        intent.putExtra("typeId", Integer.parseInt(idText));
+        intent.setClass(getActivity(), AqyhDetailActivity.class);
+
+        startActivity(intent);
     }
 }

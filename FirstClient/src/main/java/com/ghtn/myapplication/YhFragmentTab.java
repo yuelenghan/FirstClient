@@ -1,15 +1,17 @@
 package com.ghtn.myapplication;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import com.ghtn.util.ConstantUtil;
 import com.loopj.android.http.AsyncHttpClient;
@@ -31,7 +33,8 @@ import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 /**
  * Created by Administrator on 14-1-9.
  */
-public class YhFragmentTab extends Fragment implements OnRefreshListener, AbsListView.OnScrollListener {
+public class YhFragmentTab extends Fragment
+        implements OnRefreshListener, AdapterView.OnItemClickListener {
 
     private ListView listView;
 
@@ -45,14 +48,6 @@ public class YhFragmentTab extends Fragment implements OnRefreshListener, AbsLis
     private PullToRefreshLayout mPullToRefreshLayout;
 
     private AsyncHttpClient client = new AsyncHttpClient();
-
-    private int visibleThreshold = 10;
-    private int currentPage = 1;
-    private int previousTotal = 0;
-    private boolean loading = true;
-
-    private boolean scrollLoaded = true;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -99,6 +94,7 @@ public class YhFragmentTab extends Fragment implements OnRefreshListener, AbsLis
             }
         });
 
+        // 设置下拉刷新
         mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
 
         ActionBarPullToRefresh.from(getActivity())
@@ -108,6 +104,9 @@ public class YhFragmentTab extends Fragment implements OnRefreshListener, AbsLis
                 .listener(this)
                         // Finally commit the setup to our PullToRefreshLayout
                 .setup(mPullToRefreshLayout);
+
+        // 设置点击事件
+        listView.setOnItemClickListener(this);
 
         return view;
     }
@@ -146,64 +145,14 @@ public class YhFragmentTab extends Fragment implements OnRefreshListener, AbsLis
     }
 
     @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
-    }
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        String idText = (String) ((TextView) view.findViewById(R.id.tv_item_id)).getText();
 
-    @Override
-    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-       /* Log.d(TAG, "firstVisibleItem = " + firstVisibleItem + ", visibleItemCount = " + visibleItemCount + ", totalItemCount = " + totalItemCount);
-        if (firstVisibleItem + visibleItemCount >= totalItemCount) {
-            Toast.makeText(getActivity(), "到底了!!", Toast.LENGTH_SHORT).show();
-        }*/
-/*
-        if (loading) {
-            if (totalItemCount > previousTotal) {
-                loading = false;
-                previousTotal = totalItemCount;
-                currentPage++;
-            }
-        }*/
+        Intent intent = new Intent();
+        intent.putExtra("baseInfo", "yh");
+        intent.putExtra("typeId", Integer.parseInt(idText));
+        intent.setClass(getActivity(), AqyhDetailActivity.class);
 
-
-       /* if(scrollLoaded && (firstVisibleItem + visibleItemCount + visibleThreshold) >= totalItemCount){
-            scrollLoaded = false;
-
-            new AsyncTask<Void, Void, Void>() {
-
-                @Override
-                protected Void doInBackground(Void... params) {
-                    currentPage ++;
-                    try {
-                        Thread.sleep(3000);
-
-                        for (int i = 0; i < 15; i++) {
-                            Map<String, Object> map = new HashMap<>();
-                            map.put("infoid", i + 1);
-                            map.put("infoname", "test" + (i + 1));
-
-                            dataList.addLast(map);
-                        }
-                    } catch (Exception e) {
-//                        loading = false;
-                        e.printStackTrace();
-                    }
-
-                    return null;
-                }
-
-                @Override
-                protected void onPostExecute(Void aVoid) {
-                    super.onPostExecute(aVoid);
-                    simpleAdapter.notifyDataSetChanged();
-//                    loading = true;
-                    scrollLoaded = true;
-                }
-            }.execute();
-        }*/
-
-    }
-
-    private void showList() {
-
+        startActivity(intent);
     }
 }

@@ -3,10 +3,11 @@
 <uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/ptr_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <ListView
-        android:id="@+id/baseInfoList"
+        android:id="@+id/detailList"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
@@ -15,7 +16,5 @@
         style="@android:style/Widget.Holo.ProgressBar.Large"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone" />
-
+        android:layout_gravity="center" />
 </uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>
