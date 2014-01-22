@@ -11,6 +11,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ghtn.util.ConstantUtil;
 import com.ghtn.util.StringUtil;
@@ -39,7 +40,7 @@ public class AqyhDetailActivity extends ActionBarActivity
 
     private static final String TAG = "AqyhDetailActivity";
 
-    private ListView detailList;
+    private ListView listView;
     private AsyncHttpClient client = new AsyncHttpClient();
     private String url;
 
@@ -52,6 +53,7 @@ public class AqyhDetailActivity extends ActionBarActivity
     private PullToRefreshLayout mPullToRefreshLayout;
 
     private ProgressBar progressBar;
+    private TextView errorMsg;
 
     private int visibleThreshold = 10;
     private int currentPage;
@@ -63,8 +65,10 @@ public class AqyhDetailActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_aqyh_detail);
 
-        detailList = (ListView) findViewById(R.id.detailList);
+        listView = (ListView) findViewById(R.id.detailList);
         progressBar = (ProgressBar) findViewById(R.id.progress);
+        errorMsg = (TextView) findViewById(R.id.errorMsg);
+        mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.ptr_layout);
 
         baseInfo = getIntent().getStringExtra("baseInfo");
         typeId = getIntent().getIntExtra("typeId", 0);
@@ -83,58 +87,43 @@ public class AqyhDetailActivity extends ActionBarActivity
         }
 
         progressBar.setVisibility(View.VISIBLE);
-
+        client.setTimeout(10000);
         currentPage = 1;
         int start = (currentPage - 1) * ConstantUtil.DETAIL_PAGE_SIZE;
+        // 初始化dataList
+        initDataList();
         client.get(url + "/typeId/" + typeId + "/start/" + start + "/limit/" + ConstantUtil.DETAIL_PAGE_SIZE,
                 new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                        if (statusCode == 200 && response != null && response.length() > 0) {
-                            // 初始化dataList
-                            if (dataList == null) {
-                                dataList = new ArrayList<>();
-                            } else {
-                                dataList.clear();
-                            }
+                        progressBar.setVisibility(View.GONE);
 
+                        if (statusCode == 200 && response != null && response.length() > 0) {
+                            errorMsg.setVisibility(View.GONE);
                             // 向dataList中增加数据
                             addDataToList(response);
-
-                            if (baseInfo != null && baseInfo.equals("yh")) {
-                                simpleAdapter = new SimpleAdapter(AqyhDetailActivity.this,
-                                        dataList,
-                                        R.layout.aqyh_yh_detail_listview_item,
-                                        new String[]{"detailId", "detailBanci", "detailIntime", "detailRemarks"},
-                                        new int[]{R.id.detailId, R.id.detailBanci, R.id.detailIntime, R.id.detailRemarks});
-                            }
-
-                            if (baseInfo != null && baseInfo.equals("sw")) {
-                                simpleAdapter = new SimpleAdapter(AqyhDetailActivity.this,
-                                        dataList,
-                                        R.layout.aqyh_sw_detail_listview_item,
-                                        new String[]{"detailId", "detailBanci", "detailIntime", "detailRemarks"},
-                                        new int[]{R.id.detailId, R.id.detailBanci, R.id.detailIntime, R.id.detailRemarks});
-                            }
-
-                            if (baseInfo != null && baseInfo.equals("rjxx")) {
-                                simpleAdapter = new SimpleAdapter(AqyhDetailActivity.this,
-                                        dataList,
-                                        R.layout.aqyh_rjxx_detail_listview_item,
-                                        new String[]{"detailId", "detailBanci", "detailIntime", "detailKqpnumber", "detailKqpname", "detailDatafromDesc"},
-                                        new int[]{R.id.detailId, R.id.detailBanci, R.id.detailIntime, R.id.detailKqpnumber, R.id.detailKqpname, R.id.detailDatafromDesc});
-                            }
-
-                            detailList.setAdapter(simpleAdapter);
-
-                            progressBar.setVisibility(View.GONE);
+                        } else {
+                            errorMsg.setText("请求错误, 状态码:" + statusCode);
+                            errorMsg.setVisibility(View.VISIBLE);
                         }
+
+                        dataListChanged();
+                    }
+
+                    @Override
+                    public void onFailure(Throwable e, JSONObject errorResponse) {
+                        errorMsg.setText("请求服务器失败!!");
+                        errorMsg.setVisibility(View.VISIBLE);
+
+                        dataListChanged();
+
+                        Log.e(TAG, e.toString());
+
+                        progressBar.setVisibility(View.GONE);
                     }
                 });
 
         // 设置下拉刷新
-        mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.ptr_layout);
-
         ActionBarPullToRefresh.from(this)
                 // Mark All Children as pullable
                 .allChildrenArePullable()
@@ -143,33 +132,89 @@ public class AqyhDetailActivity extends ActionBarActivity
                         // Finally commit the setup to our PullToRefreshLayout
                 .setup(mPullToRefreshLayout);
 
-        detailList.setOnScrollListener(this);
+        listView.setOnScrollListener(this);
 
-        detailList.setOnItemClickListener(this);
+        listView.setOnItemClickListener(this);
+    }
+
+    private void initDataList() {
+        if (dataList == null) {
+            dataList = new ArrayList<>();
+        } else {
+            dataList.clear();
+        }
+    }
+
+    /**
+     * dataList改变时,调用此方法
+     */
+    private void dataListChanged() {
+        if (simpleAdapter != null && listView.getAdapter() != null) {
+            // 把数据变更的情况告知数据适配器
+            simpleAdapter.notifyDataSetChanged();
+        } else {
+            if (baseInfo != null && baseInfo.equals("yh")) {
+                simpleAdapter = new SimpleAdapter(AqyhDetailActivity.this,
+                        dataList,
+                        R.layout.aqyh_yh_detail_listview_item,
+                        new String[]{"detailId", "detailBanci", "detailIntime", "detailRemarks"},
+                        new int[]{R.id.detailId, R.id.detailBanci, R.id.detailIntime, R.id.detailRemarks});
+            }
+
+            if (baseInfo != null && baseInfo.equals("sw")) {
+                simpleAdapter = new SimpleAdapter(AqyhDetailActivity.this,
+                        dataList,
+                        R.layout.aqyh_sw_detail_listview_item,
+                        new String[]{"detailId", "detailBanci", "detailIntime", "detailRemarks"},
+                        new int[]{R.id.detailId, R.id.detailBanci, R.id.detailIntime, R.id.detailRemarks});
+            }
+
+            if (baseInfo != null && baseInfo.equals("rjxx")) {
+                simpleAdapter = new SimpleAdapter(AqyhDetailActivity.this,
+                        dataList,
+                        R.layout.aqyh_rjxx_detail_listview_item,
+                        new String[]{"detailId", "detailBanci", "detailIntime", "detailKqpnumber", "detailKqpname", "detailDatafromDesc"},
+                        new int[]{R.id.detailId, R.id.detailBanci, R.id.detailIntime, R.id.detailKqpnumber, R.id.detailKqpname, R.id.detailDatafromDesc});
+            }
+
+            listView.setAdapter(simpleAdapter);
+        }
     }
 
     @Override
     public void onRefreshStarted(View view) {
+        initDataList();
         currentPage = 1;
         int start = (currentPage - 1) * ConstantUtil.DETAIL_PAGE_SIZE;
         client.get(url + "/typeId/" + typeId + "/start/" + start + "/limit/" + ConstantUtil.DETAIL_PAGE_SIZE,
                 new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                        // 刷新完成
+                        mPullToRefreshLayout.setRefreshComplete();
+
                         if (statusCode == 200 && response != null && response.length() > 0) {
-                            // 清空dataList数据
-                            dataList.clear();
+                            errorMsg.setVisibility(View.GONE);
 
                             // 向dataList中增加数据
                             addDataToList(response);
-
-                            // 把数据变更的情况告知数据适配器
-                            simpleAdapter.notifyDataSetChanged();
-
-                            // 刷新完成
-                            mPullToRefreshLayout.setRefreshComplete();
-
+                        } else {
+                            errorMsg.setText("请求错误, 状态码:" + statusCode);
+                            errorMsg.setVisibility(View.VISIBLE);
                         }
+                        dataListChanged();
+                    }
+
+                    @Override
+                    public void onFailure(Throwable e, JSONObject errorResponse) {
+                        mPullToRefreshLayout.setRefreshComplete();
+
+                        errorMsg.setText("请求服务器失败!!");
+                        errorMsg.setVisibility(View.VISIBLE);
+
+                        Log.e(TAG, e.toString());
+
+                        dataListChanged();
                     }
                 });
     }
@@ -185,6 +230,7 @@ public class AqyhDetailActivity extends ActionBarActivity
         if (totalItemCount >= currentPage * ConstantUtil.DETAIL_PAGE_SIZE
                 && scrollLoaded
                 && (firstVisibleItem + visibleItemCount + visibleThreshold) >= totalItemCount) {
+            Log.d(TAG, "需要分页!!!!!!");
             scrollLoaded = false;
 
             currentPage++;
@@ -194,15 +240,25 @@ public class AqyhDetailActivity extends ActionBarActivity
                     new JsonHttpResponseHandler() {
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                            scrollLoaded = true;
                             if (statusCode == 200 && response != null && response.length() > 0) {
                                 // 向dataList中增加数据
                                 addDataToList(response);
 
-                                // 把数据变更的情况告知数据适配器
-                                simpleAdapter.notifyDataSetChanged();
-
-                                scrollLoaded = true;
+                                dataListChanged();
+                            } else {
+                                Log.e(TAG, "<<<<<<<<<<<<<<<< statusCode = " + statusCode + " >>>>>>>>>>>>>>>>>>>>>>>>>>");
+                                Toast.makeText(AqyhDetailActivity.this, "请求新数据失败!!!", Toast.LENGTH_LONG).show();
+                                currentPage = currentPage - 1; // 回到加载前的数值
                             }
+                        }
+
+                        @Override
+                        public void onFailure(Throwable e, JSONObject errorResponse) {
+                            Log.e(TAG, e.toString());
+                            Toast.makeText(AqyhDetailActivity.this, "请求新数据失败!!!", Toast.LENGTH_LONG).show();
+                            scrollLoaded = true;
+                            currentPage = currentPage - 1; // 回到加载前的数值
                         }
                     });
 
