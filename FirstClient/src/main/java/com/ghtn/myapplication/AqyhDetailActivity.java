@@ -1,13 +1,16 @@
 package com.ghtn.myapplication;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import com.ghtn.util.ConstantUtil;
 import com.ghtn.util.StringUtil;
@@ -31,7 +34,8 @@ import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 /**
  * Created by Administrator on 14-1-20.
  */
-public class AqyhDetailActivity extends ActionBarActivity implements OnRefreshListener, AbsListView.OnScrollListener {
+public class AqyhDetailActivity extends ActionBarActivity
+        implements OnRefreshListener, AbsListView.OnScrollListener, AdapterView.OnItemClickListener {
 
     private static final String TAG = "AqyhDetailActivity";
 
@@ -140,6 +144,8 @@ public class AqyhDetailActivity extends ActionBarActivity implements OnRefreshLi
                 .setup(mPullToRefreshLayout);
 
         detailList.setOnScrollListener(this);
+
+        detailList.setOnItemClickListener(this);
     }
 
     @Override
@@ -241,5 +247,26 @@ public class AqyhDetailActivity extends ActionBarActivity implements OnRefreshLi
         }
 
         return dataList;
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        String idText = (String) ((TextView) view.findViewById(R.id.detailId)).getText();
+//        Toast.makeText(AqyhDetailActivity.this, StringUtil.getIntValue(idText)+"", Toast.LENGTH_LONG).show();
+        Intent intent = new Intent();
+        intent.putExtra("id", StringUtil.getIntValue(idText));
+
+        if (baseInfo != null && baseInfo.equals("yh")) {
+            intent.setClass(AqyhDetailActivity.this, AqyhYhDetailActivity.class);
+        }
+        if (baseInfo != null && baseInfo.equals("sw")) {
+            intent.setClass(AqyhDetailActivity.this, AqyhSwDetailActivity.class);
+        }
+        if (baseInfo != null && baseInfo.equals("rjxx")) {
+            intent.setClass(AqyhDetailActivity.this, AqyhRjxxDetailActivity.class);
+        }
+
+        startActivity(intent);
+
     }
 }

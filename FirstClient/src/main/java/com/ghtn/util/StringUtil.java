@@ -20,10 +20,31 @@ public class StringUtil {
      * @return 处理之后的字符串
      */
     public static String processLongStr(String s, int limit) {
-        if (s.length() > limit) {
-            s = s.substring(0, limit) + "...";
+        if (s.trim().length() > limit) {
+            s = s.trim().substring(0, limit) + "...";
         }
         return s;
+    }
+
+    /**
+     * 从字符串中得到int值(字符串格式 -- 字符串:int)
+     *
+     * @param s
+     * @return
+     */
+    public static int getIntValue(String s) {
+        s = s.substring(s.indexOf(":") + 1).trim();
+        return Integer.parseInt(s);
+    }
+
+    /**
+     * 返回字符串的值, 如果字符串为空串, 返回"", 否则返回本身
+     *
+     * @param s
+     * @return
+     */
+    public static String getStringValue(String s) {
+        return isNullStr(s) ? "" : s.trim();
     }
 
 }

@@ -8,4 +8,58 @@
     <string name="aqyh_tab_yh">隐患</string>
     <string name="aqyh_tab_sw">三违</string>
     <string name="aqyh_tab_rjxx">入井信息</string>
+
+    <!-- 隐患详细信息 -->
+    <string name="yh_yhputinid">隐患编号</string>
+    <string name="yh_typename">专业</string>
+    <string name="yh_levelname">级别</string>
+    <string name="yh_banci">排查班次</string>
+    <string name="yh_intime">排查时间</string>
+    <string name="yh_status">状态</string>
+    <string name="yh_jctypeDesc">检查类型</string>
+    <string name="yh_remarks">隐患描述</string>
+    <string name="yh_xqdate">整改期限日期</string>
+    <string name="yh_xqbanci">整改期限班次</string>
+    <string name="yh_maindeptname">单位</string>
+    <string name="yh_zrdeptname">责任单位</string>
+    <string name="yh_zrpername">责任人</string>
+    <string name="yh_placename">地点</string>
+    <string name="yh_yhcontent">隐患依据</string>
+    <string name="yh_yqcs">逾期次数</string>
+    <string name="yh_isfine">是否罚款</string>
+
+
+    <!-- 三违详细信息 -->
+    <string name="sw_swinputid">三违id</string>
+    <string name="sw_typename">类型</string>
+    <string name="sw_zyname">专业</string>
+    <string name="sw_levelname">级别</string>
+    <string name="sw_banci">排查班次</string>
+    <string name="sw_pctime">排查时间</string>
+    <string name="sw_pcpname">排查人</string>
+    <string name="sw_pcpnameNow">排查人姓名集合</string>
+    <string name="sw_status">状态</string>
+    <string name="sw_jctypeDesc">检查类型</string>
+    <string name="sw_islearn">是否进班</string>
+    <string name="sw_remarks">描述</string>
+    <string name="sw_maindeptname">单位</string>
+    <string name="sw_zrkqname">责任科区</string>
+    <string name="sw_swpname">三违人员</string>
+    <string name="sw_placename">地点</string>
+    <string name="sw_swcontent">三违依据</string>
+    <string name="sw_isfine">是否罚款</string>
+
+    <!-- 入井信息详细信息 -->
+    <string name="rjxx_rjid">序号</string>
+    <string name="rjxx_kqpnumber">考勤人员id</string>
+    <string name="rjxx_kqpname">考勤人员姓名</string>
+    <string name="rjxx_kqtypeDesc">类型</string>
+    <string name="rjxx_datafromDesc">数据来源</string>
+    <string name="rjxx_kqtime">归属日期</string>
+    <string name="rjxx_kqdept">归属单位</string>
+    <string name="rjxx_kqbenci">归属班次</string>
+    <string name="rjxx_downtime">入井时间</string>
+    <string name="rjxx_uptime">升井时间</string>
+    <string name="rjxx_worktime">工作时间</string>
+
 </resources>

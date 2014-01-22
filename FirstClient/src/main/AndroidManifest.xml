@@ -22,5 +22,8 @@
         </activity>
         <activity android:name=".AqyhActivity" />
         <activity android:name=".AqyhDetailActivity" />
+        <activity android:name=".AqyhYhDetailActivity" />
+        <activity android:name=".AqyhSwDetailActivity" />
+        <activity android:name=".AqyhRjxxDetailActivity" />
     </application>
 </manifest>
