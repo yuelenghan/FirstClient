@@ -48,6 +48,8 @@ public class AqyhYhDetailActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_aqyh_yh_detail);
 
+        setTitle("隐患详细信息");
+
         progressBar = (ProgressBar) findViewById(R.id.progress);
 
         // 初始化textView

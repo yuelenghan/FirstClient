@@ -42,6 +42,8 @@ public class AqyhRjxxDetailActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_aqyh_rjxx_detail);
 
+        setTitle("入井详细信息");
+
         progressBar = (ProgressBar) findViewById(R.id.progress);
 
         // 初始化textView

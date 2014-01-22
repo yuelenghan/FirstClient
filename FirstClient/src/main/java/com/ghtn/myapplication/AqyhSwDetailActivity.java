@@ -49,6 +49,8 @@ public class AqyhSwDetailActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_aqyh_sw_detail);
 
+        setTitle("三违详细信息");
+
         progressBar = (ProgressBar) findViewById(R.id.progress);
 
         // 初始化textView
