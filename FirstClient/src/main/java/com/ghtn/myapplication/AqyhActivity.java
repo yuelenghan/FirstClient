@@ -46,9 +46,9 @@ public class AqyhActivity extends ActionBarActivity {
         viewPager = (ViewPager) findViewById(R.id.vp);
 
         fragmentList = new ArrayList<>();
-        Fragment yhFragment = new YhFragmentTab();
-        Fragment swFragment = new SwFragmentTab();
-        Fragment rjxxFragment = new RjxxFragmentTab();
+        Fragment yhFragment = new FragmentTab("yh");
+        Fragment swFragment = new FragmentTab("sw");
+        Fragment rjxxFragment = new FragmentTab("rjxx");
 
         fragmentList.add(yhFragment);
         fragmentList.add(swFragment);
