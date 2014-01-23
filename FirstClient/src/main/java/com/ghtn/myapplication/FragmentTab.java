@@ -246,6 +246,7 @@ public class FragmentTab extends Fragment implements OnRefreshListener, AdapterV
                     super.onPostExecute(result);
                     mPullToRefreshLayout.setRefreshComplete();
                     errorMsg.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);
                     dataListChanged();
                 }
             }.execute();

@@ -7,6 +7,7 @@ import android.view.VelocityTracker;
 import android.view.View;
 
 /**
+ * 向右滑动返回前一个页面
  * Created by Administrator on 14-1-23.
  */
 public class SwipeBackActivity extends ActionBarActivity implements View.OnTouchListener {
@@ -19,6 +20,8 @@ public class SwipeBackActivity extends ActionBarActivity implements View.OnTouch
 
     //记录手指按下时的横坐标。
     private float xDown;
+
+    private static final int MARGIN_LEFT_MAX = 50;
 
     //记录手指移动时的横坐标。
     private float xMove;
@@ -39,8 +42,8 @@ public class SwipeBackActivity extends ActionBarActivity implements View.OnTouch
                 int distanceX = (int) (xMove - xDown);
                 //获取顺时速度
                 int xSpeed = getScrollVelocity();
-                //当滑动的距离大于设定的最小距离且滑动的瞬间速度大于设定的速度时，返回到上一个activity
-                if (distanceX > XDISTANCE_MIN && xSpeed > XSPEED_MIN) {
+                //当触摸点靠近屏幕左边, 滑动的距离大于设定的最小距离且滑动的瞬间速度大于设定的速度时，返回到上一个activity
+                if (xDown < MARGIN_LEFT_MAX && distanceX > XDISTANCE_MIN && xSpeed > XSPEED_MIN) {
                     finish();
                     overridePendingTransition(R.anim.in_from_left, R.anim.out_to_right);
                 }
@@ -85,6 +88,13 @@ public class SwipeBackActivity extends ActionBarActivity implements View.OnTouch
         return Math.abs(velocity);
     }
 
+    /**
+     * 修改点击返回键的动画
+     *
+     * @param keyCode
+     * @param event
+     * @return
+     */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
