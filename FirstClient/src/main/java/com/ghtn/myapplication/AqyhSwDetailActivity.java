@@ -1,9 +1,10 @@
 package com.ghtn.myapplication;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,11 +20,15 @@ import org.json.JSONObject;
 /**
  * Created by Administrator on 14-1-21.
  */
-public class AqyhSwDetailActivity extends ActionBarActivity {
+public class AqyhSwDetailActivity extends SwipeBackActivity {
 
     private AsyncHttpClient client = new AsyncHttpClient();
 
+    private static final String TAG = "AqyhSwDetailActivity";
+
     private ProgressBar progressBar;
+    private ScrollView scrollView;
+    private TextView errorMsg;
 
     private TextView swinputid;
     private TextView typename;
@@ -52,6 +57,8 @@ public class AqyhSwDetailActivity extends ActionBarActivity {
         setTitle("三违详细信息");
 
         progressBar = (ProgressBar) findViewById(R.id.progress);
+        scrollView = (ScrollView) findViewById(R.id.sw_detail_scrollView);
+        errorMsg = (TextView) findViewById(R.id.errorMsg);
 
         // 初始化textView
         swinputid = (TextView) findViewById(R.id.swinputid);
@@ -83,6 +90,7 @@ public class AqyhSwDetailActivity extends ActionBarActivity {
             client.get(url, new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    progressBar.setVisibility(View.GONE);
                     if (statusCode == 200 && response != null && response.length() > 0) {
                         try {
                             swinputid.setText(response.getInt("swinputid") + "");
@@ -109,12 +117,25 @@ public class AqyhSwDetailActivity extends ActionBarActivity {
                             e.printStackTrace();
                         }
                     } else {
-                        Toast.makeText(AqyhSwDetailActivity.this, "请求服务器发生错误或者没有找到数据!!", Toast.LENGTH_LONG).show();
+                        errorMsg.setText("请求错误, 状态码:" + statusCode);
+                        errorMsg.setVisibility(View.VISIBLE);
                     }
+                }
+
+                @Override
+                public void onFailure(Throwable e, JSONObject errorResponse) {
+                    errorMsg.setText("请求服务器失败!!");
+                    errorMsg.setVisibility(View.VISIBLE);
+
+                    Log.e(TAG, e.toString());
+
+                    progressBar.setVisibility(View.GONE);
                 }
             });
         } else {
             Toast.makeText(this, "id错误!!", Toast.LENGTH_LONG).show();
         }
+
+        scrollView.setOnTouchListener(this);
     }
 }

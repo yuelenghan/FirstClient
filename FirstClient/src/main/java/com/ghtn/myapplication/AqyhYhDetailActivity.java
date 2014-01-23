@@ -1,9 +1,10 @@
 package com.ghtn.myapplication;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,11 +20,15 @@ import org.json.JSONObject;
 /**
  * Created by Administrator on 14-1-21.
  */
-public class AqyhYhDetailActivity extends ActionBarActivity {
+public class AqyhYhDetailActivity extends SwipeBackActivity {
 
     private AsyncHttpClient client = new AsyncHttpClient();
 
+    private static final String TAG = "AqyhYhDetailActivity";
+
     private ProgressBar progressBar;
+    private ScrollView scrollView;
+    private TextView errorMsg;
 
     private TextView yhputinid;
     private TextView typename;
@@ -51,6 +56,8 @@ public class AqyhYhDetailActivity extends ActionBarActivity {
         setTitle("隐患详细信息");
 
         progressBar = (ProgressBar) findViewById(R.id.progress);
+        scrollView = (ScrollView) findViewById(R.id.yh_detail_scrollView);
+        errorMsg = (TextView) findViewById(R.id.errorMsg);
 
         // 初始化textView
         yhputinid = (TextView) findViewById(R.id.yhputinid);
@@ -80,6 +87,7 @@ public class AqyhYhDetailActivity extends ActionBarActivity {
             client.get(url, new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    progressBar.setVisibility(View.GONE);
                     if (statusCode == 200 && response != null && response.length() > 0) {
                         try {
                             yhputinid.setText(response.getInt("yhputinid") + "");
@@ -99,18 +107,31 @@ public class AqyhYhDetailActivity extends ActionBarActivity {
                             yhcontent.setText(StringUtil.getStringValue(response.getString("yhcontent")));
                             yqcs.setText(StringUtil.getStringValue(response.getString("yqcs")));
                             isfine.setText(StringUtil.getStringValue(response.getString("isfine")));
-
-                            progressBar.setVisibility(View.GONE);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     } else {
-                        Toast.makeText(AqyhYhDetailActivity.this, "请求服务器发生错误或者没有找到数据!!", Toast.LENGTH_LONG).show();
+                        errorMsg.setText("请求错误, 状态码:" + statusCode);
+                        errorMsg.setVisibility(View.VISIBLE);
                     }
+                }
+
+                @Override
+                public void onFailure(Throwable e, JSONObject errorResponse) {
+                    errorMsg.setText("请求服务器失败!!");
+                    errorMsg.setVisibility(View.VISIBLE);
+
+                    Log.e(TAG, e.toString());
+
+                    progressBar.setVisibility(View.GONE);
                 }
             });
         } else {
             Toast.makeText(this, "id错误!!", Toast.LENGTH_LONG).show();
         }
+
+        scrollView.setOnTouchListener(this);
     }
+
+
 }

@@ -171,6 +171,7 @@ public class FragmentTab extends Fragment implements OnRefreshListener, AdapterV
 
     @Override
     public void onRefreshStarted(View view) {
+        progressBar.setVisibility(View.VISIBLE);
         initDataList();
 
         if (dataRemote) {
@@ -179,6 +180,7 @@ public class FragmentTab extends Fragment implements OnRefreshListener, AdapterV
                 public void onSuccess(int statusCode, JSONArray response) {
                     // 刷新完成
                     mPullToRefreshLayout.setRefreshComplete();
+                    progressBar.setVisibility(View.GONE);
 
                     if (statusCode == 200 && response != null && response.length() > 0) {
                         errorMsg.setVisibility(View.GONE);
@@ -207,6 +209,7 @@ public class FragmentTab extends Fragment implements OnRefreshListener, AdapterV
                 @Override
                 public void onFailure(Throwable e, JSONObject errorResponse) {
                     mPullToRefreshLayout.setRefreshComplete();
+                    progressBar.setVisibility(View.GONE);
 
                     errorMsg.setText("请求服务器失败!!");
                     errorMsg.setVisibility(View.VISIBLE);
@@ -289,5 +292,8 @@ public class FragmentTab extends Fragment implements OnRefreshListener, AdapterV
         intent.setClass(getActivity(), AqyhDetailActivity.class);
 
         startActivity(intent);
+
+        // 覆写切换动画，第一个参数进入, 第二个参数推出
+        getActivity().overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
     }
 }

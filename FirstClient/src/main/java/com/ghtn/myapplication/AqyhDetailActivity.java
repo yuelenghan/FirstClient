@@ -2,7 +2,6 @@ package com.ghtn.myapplication;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
@@ -35,8 +34,8 @@ import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 /**
  * Created by Administrator on 14-1-20.
  */
-public class AqyhDetailActivity extends ActionBarActivity
-        implements OnRefreshListener, AbsListView.OnScrollListener, AdapterView.OnItemClickListener {
+public class AqyhDetailActivity extends SwipeBackActivity
+implements OnRefreshListener, AbsListView.OnScrollListener, AdapterView.OnItemClickListener {
 
     private static final String TAG = "AqyhDetailActivity";
 
@@ -135,6 +134,8 @@ public class AqyhDetailActivity extends ActionBarActivity
         listView.setOnScrollListener(this);
 
         listView.setOnItemClickListener(this);
+
+        listView.setOnTouchListener(this);
     }
 
     private void initDataList() {
@@ -183,6 +184,7 @@ public class AqyhDetailActivity extends ActionBarActivity
 
     @Override
     public void onRefreshStarted(View view) {
+        progressBar.setVisibility(View.VISIBLE);
         initDataList();
         currentPage = 1;
         int start = (currentPage - 1) * ConstantUtil.DETAIL_PAGE_SIZE;
@@ -192,6 +194,7 @@ public class AqyhDetailActivity extends ActionBarActivity
                     public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                         // 刷新完成
                         mPullToRefreshLayout.setRefreshComplete();
+                        progressBar.setVisibility(View.GONE);
 
                         if (statusCode == 200 && response != null && response.length() > 0) {
                             errorMsg.setVisibility(View.GONE);
@@ -208,6 +211,7 @@ public class AqyhDetailActivity extends ActionBarActivity
                     @Override
                     public void onFailure(Throwable e, JSONObject errorResponse) {
                         mPullToRefreshLayout.setRefreshComplete();
+                        progressBar.setVisibility(View.GONE);
 
                         errorMsg.setText("请求服务器失败!!");
                         errorMsg.setVisibility(View.VISIBLE);
@@ -231,6 +235,7 @@ public class AqyhDetailActivity extends ActionBarActivity
                 && scrollLoaded
                 && (firstVisibleItem + visibleItemCount + visibleThreshold) >= totalItemCount) {
             Log.d(TAG, "需要分页!!!!!!");
+            progressBar.setVisibility(View.VISIBLE);
             scrollLoaded = false;
 
             currentPage++;
@@ -241,6 +246,7 @@ public class AqyhDetailActivity extends ActionBarActivity
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                             scrollLoaded = true;
+                            progressBar.setVisibility(View.GONE);
                             if (statusCode == 200 && response != null && response.length() > 0) {
                                 // 向dataList中增加数据
                                 addDataToList(response);
@@ -255,6 +261,7 @@ public class AqyhDetailActivity extends ActionBarActivity
 
                         @Override
                         public void onFailure(Throwable e, JSONObject errorResponse) {
+                            progressBar.setVisibility(View.GONE);
                             Log.e(TAG, e.toString());
                             Toast.makeText(AqyhDetailActivity.this, "请求新数据失败!!!", Toast.LENGTH_LONG).show();
                             scrollLoaded = true;
@@ -323,6 +330,7 @@ public class AqyhDetailActivity extends ActionBarActivity
         }
 
         startActivity(intent);
-
+        // 覆写切换动画，第一个参数进入, 第二个参数推出
+        overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
     }
 }

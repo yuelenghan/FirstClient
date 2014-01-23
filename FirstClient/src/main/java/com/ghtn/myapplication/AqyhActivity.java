@@ -11,6 +11,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Administrator on 14-1-9.
@@ -20,7 +21,6 @@ public class AqyhActivity extends ActionBarActivity {
 
     private ActionBar actionBar;
     private ViewPager viewPager;
-    private ArrayList<Fragment> fragmentList;
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
@@ -31,24 +31,25 @@ public class AqyhActivity extends ActionBarActivity {
         setTitle("安全隐患");
 
         actionBar = getActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        if (actionBar != null) {
+            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+            ActionBar.Tab tab = actionBar.newTab().setText(R.string.aqyh_tab_yh)
+                    .setTabListener(new MyTabsListener());
+            actionBar.addTab(tab);
 
-        ActionBar.Tab tab = actionBar.newTab().setText(R.string.aqyh_tab_yh)
-                .setTabListener(new MyTabsListener<>());
-        actionBar.addTab(tab);
+            tab = actionBar.newTab().setText(R.string.aqyh_tab_sw)
+                    .setTabListener(new MyTabsListener());
+            actionBar.addTab(tab);
 
-        tab = actionBar.newTab().setText(R.string.aqyh_tab_sw)
-                .setTabListener(new MyTabsListener<>());
-        actionBar.addTab(tab);
-
-        tab = actionBar.newTab().setText(R.string.aqyh_tab_rjxx)
-                .setTabListener(new MyTabsListener<>());
-        actionBar.addTab(tab);
+            tab = actionBar.newTab().setText(R.string.aqyh_tab_rjxx)
+                    .setTabListener(new MyTabsListener());
+            actionBar.addTab(tab);
+        }
 
 
         viewPager = (ViewPager) findViewById(R.id.vp);
 
-        fragmentList = new ArrayList<>();
+        List<Fragment> fragmentList = new ArrayList<>();
         Fragment yhFragment = new FragmentTab("yh");
         Fragment swFragment = new FragmentTab("sw");
         Fragment rjxxFragment = new FragmentTab("rjxx");
@@ -64,7 +65,7 @@ public class AqyhActivity extends ActionBarActivity {
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    protected class MyTabsListener<T extends Fragment> implements ActionBar.TabListener {
+    protected class MyTabsListener implements ActionBar.TabListener {
        /* private final Activity mActivity;
         private final String mTag;
         private Fragment mFragment;
@@ -118,9 +119,9 @@ public class AqyhActivity extends ActionBarActivity {
     }
 
     private class MyFragmentPagerAdapter extends FragmentPagerAdapter {
-        private ArrayList<Fragment> fragmentsList;
+        private List<Fragment> fragmentsList;
 
-        public MyFragmentPagerAdapter(FragmentManager fm, ArrayList<Fragment> fragments) {
+        public MyFragmentPagerAdapter(FragmentManager fm, List<Fragment> fragments) {
             super(fm);
             this.fragmentsList = fragments;
         }
