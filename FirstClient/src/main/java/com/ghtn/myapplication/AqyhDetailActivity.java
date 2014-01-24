@@ -102,7 +102,8 @@ implements OnRefreshListener, AbsListView.OnScrollListener, AdapterView.OnItemCl
                             // 向dataList中增加数据
                             addDataToList(response);
                         } else {
-                            errorMsg.setText("请求错误, 状态码:" + statusCode);
+                            String errorText = getResources().getString(R.string.request_status_error);
+                            errorMsg.setText(String.format(errorText, statusCode));
                             errorMsg.setVisibility(View.VISIBLE);
                         }
 
@@ -111,7 +112,7 @@ implements OnRefreshListener, AbsListView.OnScrollListener, AdapterView.OnItemCl
 
                     @Override
                     public void onFailure(Throwable e, JSONObject errorResponse) {
-                        errorMsg.setText("请求服务器失败!!");
+                        errorMsg.setText(R.string.request_error);
                         errorMsg.setVisibility(View.VISIBLE);
 
                         dataListChanged();
@@ -202,7 +203,8 @@ implements OnRefreshListener, AbsListView.OnScrollListener, AdapterView.OnItemCl
                             // 向dataList中增加数据
                             addDataToList(response);
                         } else {
-                            errorMsg.setText("请求错误, 状态码:" + statusCode);
+                            String errorText = getResources().getString(R.string.request_status_error);
+                            errorMsg.setText(String.format(errorText, statusCode));
                             errorMsg.setVisibility(View.VISIBLE);
                         }
                         dataListChanged();
@@ -213,7 +215,7 @@ implements OnRefreshListener, AbsListView.OnScrollListener, AdapterView.OnItemCl
                         mPullToRefreshLayout.setRefreshComplete();
                         progressBar.setVisibility(View.GONE);
 
-                        errorMsg.setText("请求服务器失败!!");
+                        errorMsg.setText(R.string.request_error);
                         errorMsg.setVisibility(View.VISIBLE);
 
                         Log.e(TAG, e.toString());

@@ -7,4 +7,12 @@
         android:fromXDelta="0%p"
         android:toXDelta="-100%p" />
 
+    <scale
+        android:duration="300"
+        android:fromXScale="1.0"
+        android:fromYScale="1.0"
+        android:toXScale="0.5"
+        android:toYScale="0.5"
+        android:pivotX="50%"
+        android:pivotY="50%" />
 </set>
