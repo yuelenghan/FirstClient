@@ -57,6 +57,7 @@ public class FragmentTab extends Fragment implements OnRefreshListener, AdapterV
     private boolean dataRemote = true;
 
     public FragmentTab() {
+        System.out.println("创建一个Tab!!");
     }
 
     public FragmentTab(String baseInfo) {

@@ -1,5 +1,6 @@
 package com.ghtn.myapplication;
 
+import android.content.res.Configuration;
 import android.support.v7.app.ActionBarActivity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -100,5 +101,10 @@ public class SwipeBackActivity extends ActionBarActivity implements View.OnTouch
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
     }
 }

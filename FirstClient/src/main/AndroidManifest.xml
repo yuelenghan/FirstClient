@@ -20,10 +20,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AqyhActivity" />
-        <activity android:name=".AqyhDetailActivity" />
-        <activity android:name=".AqyhYhDetailActivity" />
-        <activity android:name=".AqyhSwDetailActivity" />
-        <activity android:name=".AqyhRjxxDetailActivity" />
+        <activity
+            android:name=".AqyhActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
+        <activity
+            android:name=".AqyhDetailActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
+        <activity
+            android:name=".AqyhYhDetailActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
+        <activity
+            android:name=".AqyhSwDetailActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
+        <activity
+            android:name=".AqyhRjxxDetailActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
     </application>
 </manifest>
