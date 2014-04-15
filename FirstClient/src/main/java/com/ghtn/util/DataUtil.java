@@ -1,5 +1,6 @@
 package com.ghtn.util;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,6 +16,8 @@ public class DataUtil {
     public static List<Map<String, Object>> swBaseInfoList;
 
     public static List<Map<String, Object>> rjxxBaseInfoList;
+
+    public static List<Map<String, Object>> rjxxSummaryList;
 
     static {
         // 隐患基础信息测试数据
@@ -48,6 +51,24 @@ public class DataUtil {
         map2.put("infoid", 2);
         map2.put("infoname", "代班");
         rjxxBaseInfoList.add(map2);
+
+        // 入井信息汇总数据
+        rjxxSummaryList = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("dept", "dept" + i);
+            map.put("name", "name" + i);
+            map.put("rjTotal", "rjTotal" + i);
+            map.put("ybrj", "ybrj" + i);
+            map.put("zbrj", "zbrj" + i);
+            map.put("zhbfj", "zhbfj" + i);
+            map.put("zcrj", "zcrj" + i);
+            map.put("dbrj", "dbrj" + i);
+            map.put("pcyh", "pcyh" + i);
+            map.put("pcsw", "pcsw" + i);
+
+            rjxxSummaryList.add(map);
+        }
     }
 
 }

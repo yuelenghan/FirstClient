@@ -13,27 +13,29 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name="com.ghtn.myapplication.MainActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".AqyhActivity"
+            android:name="com.ghtn.myapplication.AqyhActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity
-            android:name=".AqyhDetailActivity"
+            android:name="com.ghtn.myapplication.AqyhDetailActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity
-            android:name=".AqyhYhDetailActivity"
+            android:name="com.ghtn.myapplication.AqyhYhDetailActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity
-            android:name=".AqyhSwDetailActivity"
+            android:name="com.ghtn.myapplication.AqyhSwDetailActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity
-            android:name=".AqyhRjxxDetailActivity"
+            android:name="com.ghtn.myapplication.AqyhRjxxDetailActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
     </application>
+
 </manifest>

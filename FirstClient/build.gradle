@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.8.+'
+        classpath 'com.android.tools.build:gradle:0.9.+'
     }
 }
 apply plugin: 'android'
@@ -14,7 +14,7 @@ repositories {
 
 android {
     compileSdkVersion 19
-    buildToolsVersion '19.0.1'
+    buildToolsVersion '19.0.3'
 
     defaultConfig {
         minSdkVersion 14
@@ -25,11 +25,31 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
     }
+
+    // 签名
+    signingConfigs {
+        myConfig {
+            storeFile file("fxyk.keystore")
+            storePassword "123456"
+            keyAlias "fxyk"
+            keyPassword "123456"
+        }
+    }
+
+    // 打包类型
+    buildTypes {
+        release {
+            signingConfig signingConfigs.myConfig
+            //代码混淆
+            runProguard true
+            proguardFile 'proguard-android.txt'
+        }
+    }
 }
 
 dependencies {
     compile 'com.android.support:appcompat-v7:+'
-    compile 'com.android.support:support-v4:19.0.1'
+    compile 'com.android.support:support-v4:19.1.0'
     compile files('libs/android-async-http-1.4.4.jar')
     compile 'com.github.chrisbanes.actionbarpulltorefresh:library:+'
 }

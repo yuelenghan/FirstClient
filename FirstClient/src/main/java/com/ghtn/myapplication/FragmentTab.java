@@ -14,7 +14,6 @@ import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
-import com.ghtn.util.ConstantUtil;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -57,10 +56,9 @@ public class FragmentTab extends Fragment implements OnRefreshListener, AdapterV
     private boolean dataRemote = true;
 
     public FragmentTab() {
-        System.out.println("创建一个Tab!!");
     }
 
-    public FragmentTab(String baseInfo) {
+ /*   public FragmentTab(String baseInfo) {
         this.baseInfo = baseInfo;
         if (baseInfo.equals("yh")) {
             this.TAG = "YhFragmentTab";
@@ -77,11 +75,18 @@ public class FragmentTab extends Fragment implements OnRefreshListener, AdapterV
             this.resource = R.layout.fragment_rjxxtab_aqyh;
             this.dataRemote = false;
         }
-    }
+    }*/
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Bundle args = getArguments();
+        this.baseInfo = args.getString("baseInfo");
+        this.TAG = args.getString("TAG");
+        this.resource = args.getInt("resource");
+        this.url = args.getString("url");
+        this.dataRemote = args.getBoolean("dataRemote");
+
         View view = inflater.inflate(resource, container, false);
 
         if (view != null) {

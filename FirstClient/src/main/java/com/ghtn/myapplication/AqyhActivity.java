@@ -11,6 +11,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 
+import com.ghtn.util.ConstantUtil;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,9 +53,33 @@ public class AqyhActivity extends ActionBarActivity {
         viewPager = (ViewPager) findViewById(R.id.vp);
 
         List<Fragment> fragmentList = new ArrayList<>();
-        Fragment yhFragment = new FragmentTab("yh");
-        Fragment swFragment = new FragmentTab("sw");
-        Fragment rjxxFragment = new FragmentTab("rjxx");
+        Fragment yhFragment = new FragmentTab();
+        Bundle args1 = new Bundle();
+        args1.putString("baseInfo", "yh");
+        args1.putString("TAG", "YhFragmentTab");
+        args1.putInt("resource", R.layout.fragment_yhtab_aqyh);
+        args1.putString("url", ConstantUtil.BASE_URL + "/baseInfo/1");
+        args1.putBoolean("dataRemote", true);
+        yhFragment.setArguments(args1);
+
+        Fragment swFragment = new FragmentTab();
+        Bundle args2 = new Bundle();
+        args2.putString("baseInfo", "sw");
+        args2.putString("TAG", "SwFragmentTab");
+        args2.putInt("resource", R.layout.fragment_swtab_aqyh);
+        args2.putString("url", ConstantUtil.BASE_URL + "/baseInfo/102");
+        args2.putBoolean("dataRemote", true);
+        swFragment.setArguments(args2);
+
+        Fragment rjxxFragment = new FragmentTab();
+        Bundle args3 = new Bundle();
+        args3.putString("baseInfo", "rjxx");
+        args3.putString("TAG", "RjxxFragmentTab");
+        args3.putInt("resource", R.layout.fragment_rjxxtab_aqyh);
+        args3.putString("url", "");
+        args3.putBoolean("dataRemote", false);
+        rjxxFragment.setArguments(args3);
+
 
         fragmentList.add(yhFragment);
         fragmentList.add(swFragment);
